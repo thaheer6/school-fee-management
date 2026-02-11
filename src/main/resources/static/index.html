@@ -2,110 +2,612 @@
 <html>
 <head>
     <title>Gayatri School Fee System</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 
     <style>
-        body{font-family:Poppins;background:#f4f6f9;margin:0}
-        nav{background:#2c3e50;color:white;padding:15px;display:flex;gap:20px}
-        nav button{background:none;border:none;color:white;font-size:16px;cursor:pointer}
-
-        section{display:none;padding:30px}
-        .active{display:block}
-
-        .center-container{
-        display:flex;
-        flex-direction:column;
-        align-items:center;
-        width:100%;
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
         }
 
-        .form-card{
-        background:white;
-        padding:20px;
-        width:350px;
-        border-radius:12px;
-        box-shadow:0 4px 10px rgba(0,0,0,0.1)
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #0f0f23, #1a1a2e, #16213e, #0f3460);
+            background-size: 400% 400%;
+            animation: gradientShift 12s ease infinite;
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
         }
 
-        input{width:100%;padding:10px;margin:8px 0;border:1px solid #ccc;border-radius:6px}
-
-        .save-btn{
-        background:#27ae60;color:white;border:none;padding:10px;
-        width:100%;border-radius:6px;cursor:pointer
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image:
+                radial-gradient(2px 2px at 20px 30px, #eee, transparent),
+                radial-gradient(2px 2px at 40px 70px, rgba(255,255,255,0.8), transparent),
+                radial-gradient(1px 1px at 90px 40px, #fff, transparent),
+                radial-gradient(1px 1px at 130px 80px, rgba(255,255,255,0.6), transparent);
+            background-repeat: repeat;
+            background-size: 200px 100px;
+            animation: float 20s linear infinite;
+            opacity: 0.08;
+            z-index: -1;
         }
 
-        .students-grid{
-        display:grid;
-        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-        gap:20px;
-        margin-top:30px;
-        width:100%;
+        @keyframes gradientShift {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
         }
 
-        .student-card{
-        background:white;padding:15px;border-radius:10px;
-        box-shadow:0 4px 10px rgba(0,0,0,0.1);
-        animation:fade 0.4s
+        @keyframes float {
+            0% { transform: translateY(0px) rotate(0deg); }
+            100% { transform: translateY(-20px) rotate(360deg); }
         }
 
-        .student-card h3{margin:0;color:#2c3e50}
-
-        .delete-btn{
-        background:#e74c3c;color:white;border:none;
-        padding:6px 10px;border-radius:5px;cursor:pointer
+        nav {
+            background: rgba(20, 25, 40, 0.95);
+            backdrop-filter: blur(15px);
+            color: white;
+            padding: 20px 30px;
+            display: flex;
+            gap: 30px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+            position: sticky;
+            top: 0;
+            z-index: 100;
         }
 
-        .edit-btn{
-        background:#3498db;color:white;border:none;
-        padding:6px 10px;border-radius:5px;cursor:pointer;margin-right:5px
+        nav button {
+            background: transparent;
+            border: 2px solid transparent;
+            color: #a0a0a0;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            padding: 10px 20px;
+            border-radius: 25px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
         }
 
-        .pay-card{
-        background:white;padding:20px;width:350px;
-        border-radius:12px;box-shadow:0 4px 10px rgba(0,0,0,0.1)
+        nav button:hover {
+            color: #fff;
+            border-color: #667eea;
+            background: rgba(102, 126, 234, 0.1);
+            transform: translateY(-2px);
         }
 
-        .receipt-box{
-        background:white;padding:20px;width:400px;
-        border-radius:12px;box-shadow:0 4px 10px rgba(0,0,0,0.1)
+        nav button.active {
+            color: #667eea;
+            border-color: #667eea;
+            background: rgba(102, 126, 234, 0.2);
         }
 
-        .print-btn{
-        background:#2c3e50;color:white;border:none;
-        padding:10px;border-radius:6px;margin-top:10px
+        .logout-btn {
+            margin-left: auto;
+            background: linear-gradient(90deg, #e74c3c, #c0392b);
+            color: white !important;
+            border-color: #e74c3c !important;
         }
 
-        @keyframes fade{
-        from{opacity:0;transform:translateY(10px)}
-        to{opacity:1;transform:translateY(0)}
+        .logout-btn:hover {
+            background: linear-gradient(90deg, #c0392b, #a93226) !important;
+            border-color: #c0392b !important;
+            transform: translateY(-2px) scale(1.05) !important;
+            box-shadow: 0 10px 30px rgba(231, 76, 60, 0.4) !important;
         }
 
-        select{
-        width:100%;
-        padding:10px;
-        margin:8px 0;
-        border:1px solid #ccc;
-        border-radius:6px
+        section {
+            display: none;
+            padding: 40px;
+            animation: slideUp 0.8s ease-out;
+        }
+
+        .active {
+            display: block;
+        }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .center-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        /* HOME PAGE ENHANCEMENTS */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 25px;
+            width: 100%;
+            margin: 40px 0;
+        }
+
+        .stat-card {
+            background: rgba(20, 25, 40, 0.9);
+            backdrop-filter: blur(15px);
+            padding: 30px;
+            border-radius: 20px;
+            border: 1px solid rgba(255,255,255,0.1);
+            text-align: center;
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 25px 50px rgba(102,126,234,0.3);
+        }
+
+        .stat-icon {
+            font-size: 48px;
+            color: #667eea;
+            margin-bottom: 15px;
+        }
+
+        .stat-number {
+            font-size: 36px;
+            font-weight: 700;
+            color: #fff;
+            margin-bottom: 8px;
+        }
+
+        .stat-label {
+            color: #a0a0a0;
+            font-size: 16px;
+            font-weight: 500;
+        }
+
+        .content-section {
+            background: rgba(20, 25, 40, 0.9);
+            backdrop-filter: blur(15px);
+            padding: 40px;
+            border-radius: 20px;
+            border: 1px solid rgba(255,255,255,0.1);
+            width: 100%;
+            max-width: 800px;
+            margin: 30px 0;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+        }
+
+        .section-title {
+            color: #fff;
+            font-size: 28px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .section-text {
+            color: #a0a0a0;
+            line-height: 1.8;
+            font-size: 16px;
+        }
+
+        .rules-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .rules-list li {
+            background: rgba(255,255,255,0.05);
+            margin: 15px 0;
+            padding: 20px;
+            border-radius: 12px;
+            border-left: 4px solid #667eea;
+            transition: all 0.3s ease;
+        }
+
+        .rules-list li:hover {
+            background: rgba(102,126,234,0.1);
+            transform: translateX(10px);
+        }
+
+        .rule-icon {
+            color: #667eea;
+            font-size: 20px;
+            margin-right: 15px;
+        }
+
+        .quick-links {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-top: 40px;
+            width: 100%;
+        }
+
+        .quick-link {
+            background: linear-gradient(135deg, rgba(102,126,234,0.2), rgba(118,75,162,0.2));
+            padding: 25px;
+            border-radius: 16px;
+            text-align: center;
+            text-decoration: none;
+            color: #fff;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255,255,255,0.1);
+            cursor: pointer;
+        }
+
+        .quick-link:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(102,126,234,0.3);
+            color: #fff;
+        }
+
+        .quick-link i {
+            font-size: 32px;
+            margin-bottom: 15px;
+            display: block;
+        }
+
+        /* CARDS */
+        .form-card, .pay-card, .receipt-box {
+            background: rgba(20, 25, 40, 0.95);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255,255,255,0.1);
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+            animation: fadeInUp 0.6s ease-out;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .form-card { width: 450px; }
+        .pay-card { width: 450px; }
+        .receipt-box { width: 500px; }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .center-container h2 {
+            color: #fff;
+            font-size: 32px;
+            font-weight: 600;
+            margin-bottom: 10px;
+            text-align: center;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.5);
+        }
+
+        select {
+            width: 100% !important;
+            padding: 15px 45px 15px 20px !important;
+            margin: 12px 0 !important;
+            min-height: 56px !important;
+            background: linear-gradient(135deg, rgba(255,255,255,0.18), rgba(255,255,255,0.08)) !important;
+            border: 2px solid rgba(255,255,255,0.3) !important;
+            border-radius: 12px !important;
+            color: #ffffff !important;
+            font-size: 16px !important;
+            font-weight: 500 !important;
+            font-family: 'Poppins', sans-serif !important;
+            outline: none !important;
+            backdrop-filter: blur(10px) !important;
+            cursor: pointer !important;
+            -webkit-appearance: none !important;
+            -moz-appearance: none !important;
+            appearance: none !important;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.5) !important;
+            transition: all 0.3s ease !important;
+            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='white' stroke='white'%3e%3cpath d='M7 10l5 5 5-5z'/%3e%3c/svg%3e") !important;
+            background-repeat: no-repeat !important;
+            background-position: right 18px center !important;
+            background-size: 20px !important;
+        }
+
+        select option {
+            background: #16213e !important;
+            color: #ffffff !important;
+            padding: 12px !important;
+            font-size: 16px !important;
+            font-weight: 500 !important;
+        }
+
+        select:focus {
+            border-color: #667eea !important;
+            background: rgba(255,255,255,0.22) !important;
+            box-shadow: 0 0 0 3px rgba(102,126,234,0.3) !important;
+            transform: translateY(-2px) !important;
+        }
+
+        input {
+            width: 100%;
+            padding: 15px 20px;
+            margin: 12px 0;
+            background: rgba(255,255,255,0.08);
+            border: 2px solid rgba(255,255,255,0.15);
+            border-radius: 12px;
+            color: #fff;
+            font-size: 16px;
+            font-family: 'Poppins', sans-serif;
+            outline: none;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+
+        input::placeholder {
+            color: #888;
+        }
+
+        input:focus {
+            border-color: #667eea;
+            background: rgba(255,255,255,0.12);
+            box-shadow: 0 0 20px rgba(102,126,234,0.3);
+            transform: translateY(-2px);
+        }
+
+        .save-btn, .print-btn {
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            margin-top: 10px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .save-btn:hover, .print-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 40px rgba(102,126,234,0.4);
+        }
+
+        .students-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 25px;
+            margin-top: 40px;
+            width: 100%;
+        }
+
+        .student-card {
+            background: rgba(20, 25, 40, 0.95);
+            backdrop-filter: blur(15px);
+            padding: 25px;
+            border-radius: 16px;
+            border: 1px solid rgba(255,255,255,0.1);
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+            animation: fadeInUp 0.5s ease-out;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .student-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 60px rgba(102,126,234,0.2);
+        }
+
+        .student-card h3 {
+            margin: 0 0 15px 0;
+            color: #fff;
+            font-size: 22px;
+            font-weight: 600;
+        }
+
+        .student-card p {
+            color: #a0a0a0;
+            margin: 8px 0;
+            font-size: 14px;
+        }
+
+        .delete-btn, .edit-btn {
+            padding: 10px 16px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            margin-right: 8px;
+        }
+
+        .delete-btn {
+            background: linear-gradient(90deg, #e74c3c, #c0392b);
+            color: white;
+        }
+
+        .edit-btn {
+            background: linear-gradient(90deg, #3498db, #2980b9);
+            color: white;
+        }
+
+        .delete-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 20px rgba(231,76,60,0.4);
+        }
+
+        .edit-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 20px rgba(52,152,219,0.4);
+        }
+
+        hr {
+            border: none;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            margin: 20px 0;
+        }
+
+        @media (max-width: 768px) {
+            .form-card, .pay-card, .receipt-box { width: 90%; }
+            .students-grid { grid-template-columns: 1fr; }
+            nav { flex-wrap: wrap; gap: 15px; }
+            .stats-grid { grid-template-columns: 1fr; }
+        }
+
+        #classFilter {
+            width: 350px !important;
+            margin-top: 30px !important;
+            background: linear-gradient(135deg, rgba(102,126,234,0.15), rgba(118,75,162,0.15)) !important;
+            border-color: rgba(102,126,234,0.4) !important;
         }
     </style>
 </head>
 
 <body>
-
 <nav>
-    <button onclick="show('home')">HOME</button>
-    <button onclick="show('admin')">ADMIN PANEL</button>
-    <button onclick="show('pay')">PAYMENT</button>
-    <button onclick="show('receipt')">RECEIPT</button>
+    <button onclick="show(event,'home')" class="active">HOME</button>
+    <button onclick="show(event,'admin')">ADMIN PANEL</button>
+    <button onclick="show(event,'pay')">PAYMENT</button>
+    <button onclick="show(event,'receipt')">RECEIPT</button>
+    <button onclick="logout()" class="logout-btn">
+        <i class="fas fa-sign-out-alt"></i> LOGOUT
+    </button>
 </nav>
 
-<!-- HOME -->
+<!-- ✨ FULLY ENHANCED HOME SECTION -->
 <section id="home" class="active">
     <div class="center-container">
-        <h2>Shri Gayatri English Medium High School</h2>
-        <p>Quality education from LKG to 10th</p>
-        <p>₹ 9876543210</p>
-        <p>📧 gayatrischool@gmail.com</p>
+        <!-- Hero Header -->
+        <h2 style="font-size: 42px; margin-bottom: 15px;">Shri Gayatri English Medium High School</h2>
+        <p style="font-size: 22px; margin-bottom: 10px;">Quality Education from LKG to 10th Class</p>
+
+        <div style="display: flex; gap: 30px; margin: 30px 0; flex-wrap: wrap; justify-content: center;">
+            <p style="font-size: 18px;"><i class="fas fa-phone"></i> +91 98765 43210</p>
+            <p style="font-size: 18px;"><i class="fas fa-envelope"></i> gayatrischool@gmail.com</p>
+            <p style="font-size: 18px;"><i class="fas fa-map-marker-alt"></i> Hyderabad, Telangana</p>
+        </div>
+
+        <!-- Stats Cards -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <i class="fas fa-users stat-icon"></i>
+                <div class="stat-number">1,250+</div>
+                <div class="stat-label">Happy Students</div>
+            </div>
+            <div class="stat-card">
+                <i class="fas fa-chalkboard-teacher stat-icon"></i>
+                <div class="stat-number">85+</div>
+                <div class="stat-label">Expert Teachers</div>
+            </div>
+            <div class="stat-card">
+                <i class="fas fa-award stat-icon"></i>
+                <div class="stat-number">98%</div>
+                <div class="stat-label">Success Rate</div>
+            </div>
+            <div class="stat-card">
+                <i class="fas fa-calendar stat-icon"></i>
+                <div class="stat-number">25+</div>
+                <div class="stat-label">Years Experience</div>
+            </div>
+        </div>
+
+        <!-- About Section -->
+        <div class="content-section">
+            <h3 class="section-title">
+                <i class="fas fa-info-circle"></i>
+                About Our School
+            </h3>
+            <p class="section-text">
+                Established in 2000, Shri Gayatri English Medium High School is committed to providing quality education
+                from Pre-KG to 10th Class. Our holistic approach focuses on academic excellence, character building,
+                and overall personality development. We nurture young minds with modern teaching methods and timeless values.
+            </p>
+        </div>
+
+        <!-- Quick Links -->
+        <div style="width: 100%; margin: 40px 0;">
+            <h3 class="section-title" style="justify-content: center;">
+                <i class="fas fa-link"></i> Quick Access
+            </h3>
+            <div class="quick-links">
+                <div class="quick-link" onclick="show(event,'admin')">
+                    <i class="fas fa-user-graduate"></i>
+                    Student Portal
+                </div>
+                <div class="quick-link" onclick="show(event,'pay')">
+                    <i class="fas fa-credit-card"></i>
+                    Fee Payment
+                </div>
+                <div class="quick-link" onclick="show(event,'receipt')">
+                    <i class="fas fa-file-invoice"></i>
+                    View Receipts
+                </div>
+                <div class="quick-link">
+                    <i class="fas fa-calendar-alt"></i>
+                    Academic Calendar
+                </div>
+                <div class="quick-link">
+                    <i class="fas fa-download"></i>
+                    Syllabus Download
+                </div>
+                <div class="quick-link">
+                    <i class="fas fa-bell"></i>
+                    Notifications
+                </div>
+            </div>
+        </div>
+
+        <!-- School Rules -->
+        <div class="content-section">
+            <h3 class="section-title">
+                <i class="fas fa-gavel"></i>
+                School Rules & Regulations
+            </h3>
+            <ul class="rules-list">
+                <li><i class="fas fa-check-circle rule-icon"></i>Complete uniform compulsory daily</li>
+                <li><i class="fas fa-check-circle rule-icon"></i>75% minimum attendance required</li>
+                <li><i class="fas fa-check-circle rule-icon"></i>No mobile phones allowed</li>
+                <li><i class="fas fa-check-circle rule-icon"></i>Fee payment due by 10th of each month</li>
+                <li><i class="fas fa-check-circle rule-icon"></i>Respect all teachers and staff</li>
+                <li><i class="fas fa-check-circle rule-icon"></i>Maintain classroom discipline</li>
+                <li><i class="fas fa-check-circle rule-icon"></i>No eating in classrooms</li>
+            </ul>
+        </div>
+
+        <!-- Facilities -->
+        <div class="content-section">
+            <h3 class="section-title">
+                <i class="fas fa-building"></i>
+                Our Facilities
+            </h3>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin-top: 20px;">
+                <div style="text-align: center; color: #a0a0a0;">
+                    <i class="fas fa-laptop" style="font-size: 36px; color: #667eea; margin-bottom: 10px;"></i>
+                    <div>Computer Lab</div>
+                </div>
+                <div style="text-align: center; color: #a0a0a0;">
+                    <i class="fas fa-dumbbell" style="font-size: 36px; color: #667eea; margin-bottom: 10px;"></i>
+                    <div>Sports Ground</div>
+                </div>
+                <div style="text-align: center; color: #a0a0a0;">
+                    <i class="fas fa-book-open" style="font-size: 36px; color: #667eea; margin-bottom: 10px;"></i>
+                    <div>Library</div>
+                </div>
+                <div style="text-align: center; color: #a0a0a0;">
+                    <i class="fas fa-users" style="font-size: 36px; color: #667eea; margin-bottom: 10px;"></i>
+                    <div>Activity Room</div>
+                </div>
+            </div>
+        </div>
     </div>
 </section>
 
@@ -113,44 +615,33 @@
 <section id="admin">
     <div class="center-container">
         <h2>Student Management</h2>
-
         <div class="form-card">
             <input id="sid" placeholder="Student ID">
             <input id="sname" placeholder="Student Name">
             <input id="pname" placeholder="Parent Name">
             <input id="mobile" placeholder="Mobile Number">
-
             <select id="className">
                 <option value="">Select Class</option>
-                <option>PKG</option>
-                <option>LKG</option>
-                <option>UKG</option>
+                <option>PKG</option><option>LKG</option><option>UKG</option>
                 <option>1</option><option>2</option><option>3</option>
                 <option>4</option><option>5</option><option>6</option>
                 <option>7</option><option>8</option><option>9</option>
                 <option>10</option>
             </select>
-
             <input id="fee" placeholder="Total Fee">
             <button class="save-btn" onclick="saveStudent()">Save / Update</button>
-
-            <hr style="margin:15px 0">
-
+            <hr>
             <input id="searchId" placeholder="Search Student by ID">
-            <button onclick="searchById()">Search</button>
+            <button class="save-btn" onclick="searchById()" style="background: linear-gradient(90deg, #f39c12, #e67e22);">Search</button>
         </div>
-
-        <select id="classFilter" onchange="filterByClass()" style="margin-top:20px">
+        <select id="classFilter" onchange="filterByClass()">
             <option value="">All Classes</option>
-            <option>PKG</option>
-            <option>LKG</option>
-            <option>UKG</option>
+            <option>PKG</option><option>LKG</option><option>UKG</option>
             <option>1</option><option>2</option><option>3</option>
             <option>4</option><option>5</option><option>6</option>
             <option>7</option><option>8</option><option>9</option>
             <option>10</option>
         </select>
-
         <div class="students-grid" id="students"></div>
     </div>
 </section>
@@ -159,16 +650,14 @@
 <section id="pay">
     <div class="center-container">
         <h2>Make Payment</h2>
-
         <div class="pay-card">
             <input id="pid" placeholder="Student ID">
-            <button onclick="fetchStudent()">Fetch Student</button>
+            <button class="save-btn" onclick="fetchStudent()" style="background: linear-gradient(90deg, #27ae60, #2ecc71);">Fetch Student</button>
             <div id="pdata"></div>
             <input id="amt" placeholder="Amount to Pay">
             <button class="save-btn" onclick="pay()">Pay</button>
             <button class="print-btn" onclick="printPayment()">Print Receipt</button>
         </div>
-
         <div id="paymentReceipt" class="receipt-box" style="display:none">
             <h2 style="text-align:center">Shri Gayatri English Medium High School</h2>
             <hr>
@@ -176,18 +665,14 @@
             <p><b>Student Name:</b> <span id="r_name"></span></p>
             <p><b>Parent Name:</b> <span id="r_parent"></span></p>
             <p><b>Mobile:</b> <span id="r_mobile"></span></p>
-
             <hr>
             <p><b>Total Fee:</b> ₹<span id="r_total"></span></p>
             <p><b>Previous Balance:</b> ₹<span id="r_prev"></span></p>
             <p><b>Paid Now:</b> ₹<span id="r_paid"></span></p>
             <p><b>Remaining Balance:</b> ₹<span id="r_remain"></span></p>
-
             <hr>
             <p><b>Date:</b> <span id="r_date"></span></p>
-            <p style="text-align:center;margin-top:20px">
-                Thank you for your payment 🙏
-            </p>
+            <p style="text-align:center;margin-top:20px">Thank you for your payment 🙏</p>
         </div>
     </div>
 </section>
@@ -196,10 +681,9 @@
 <section id="receipt">
     <div class="center-container">
         <h2>Official Fee Receipt</h2>
-
         <div class="receipt-box">
             <input id="rid" placeholder="Student ID">
-            <button onclick="getReceipt()">Get Receipt</button>
+            <button class="save-btn" onclick="getReceipt()" style="background: linear-gradient(90deg, #9b59b6, #8e44ad);">Get Receipt</button>
             <div id="rdata"></div>
             <button class="print-btn" onclick="window.print()">Print</button>
         </div>
@@ -213,223 +697,226 @@
     let paidAmount=0;
     let allStudents=[];
 
-    function show(id){
-    document.querySelectorAll("section").forEach(s=>s.classList.remove("active"));
-    document.getElementById(id).classList.add("active");
-    if(id==="admin") loadStudents();
+    function show(event, id){
+        document.querySelectorAll("section").forEach(s=>s.classList.remove("active"));
+        document.querySelectorAll("nav button").forEach(b=>b.classList.remove("active"));
+        document.getElementById(id).classList.add("active");
+        event.target.classList.add("active");
+        if(id==="admin") loadStudents();
+    }
+
+    // Logout function
+    function logout() {
+        if (confirm("Are you sure you want to logout?")) {
+            // Clear any local storage/session storage if needed
+            localStorage.clear();
+            sessionStorage.clear();
+
+            // Redirect to login page (adjust URL as needed for your login page)
+            window.location.href = "login.html";
+            // Alternative: if login is index.html
+            // window.location.href = "index.html";
+            // Alternative: if login is in different directory
+            // window.location.href = "../login.html";
+        }
     }
 
     function saveStudent(){
-    fetch(api,{
-    method:"POST",
-    headers:{"Content-Type":"application/json"},
-    body:JSON.stringify({
-    studentId:sid.value,
-    name:sname.value,
-    parentName:pname.value,
-    mobile:mobile.value,
-    className:className.value,
-    totalFee:fee.value,
-    balanceFee:fee.value
-    })
-    }).then(()=>{clearForm();loadStudents();});
+        fetch(api,{
+            method:"POST",
+            headers:{"Content-Type":"application/json"},
+            body:JSON.stringify({
+                studentId:sid.value,
+                name:sname.value,
+                parentName:pname.value,
+                mobile:mobile.value,
+                className:className.value,
+                totalFee:fee.value,
+                balanceFee:fee.value
+            })
+        }).then(()=>{clearForm();loadStudents();});
     }
 
     function loadStudents(){
-    fetch(api).then(r=>r.json()).then(data=>{
-    allStudents=data;
-    renderStudents(data);
-    });
+        fetch(api).then(r=>r.json()).then(data=>{
+            allStudents=data;
+            renderStudents(data);
+        });
     }
 
     function deleteStudent(studentId){
-    if(!confirm("Are you sure you want to delete this student?")) return;
-
-    fetch(api + "/" + studentId, {
-        method: "DELETE"
-    })
-    .then(response => {
-        if (!response.ok) {
-            throw new Error("Delete failed");
-        }
-        return response.text();
-    })
-    .then(() => {
-        alert("Student deleted successfully");
-        loadStudents(); // refresh cards
-    })
-    .catch(err => {
-        console.error(err);
-        alert("Delete failed. Please check backend.");
-    });
-}
-
+        if(!confirm("Are you sure you want to delete this student?")) return;
+        fetch(api + "/" + studentId, {method: "DELETE"})
+        .then(response => {
+            if (!response.ok) throw new Error("Delete failed");
+            return response.text();
+        })
+        .then(() => {
+            alert("Student deleted successfully");
+            loadStudents();
+        })
+        .catch(err => {
+            console.error(err);
+            alert("Delete failed. Please check backend.");
+        });
+    }
 
     function renderStudents(list){
-    students.innerHTML="";
-    list.forEach(s=>{
-    students.innerHTML+=`
-    <div class="student-card">
-    <h3>${s.name}</h3>
-    <p>ID: ${s.studentId}</p>
-    <p>Class: <b>${s.className}</b></p>
-    <p>Parent: ${s.parentName}</p>
-    <p>Mobile: ${s.mobile}</p>
-    <p>Total Fee: ₹${s.totalFee}</p>
-    <p><b>Balance: ₹${s.balanceFee}</b></p>
-    <button class="edit-btn" onclick='editStudent(${JSON.stringify(s)})'>Edit</button>
-    <button class="delete-btn" onclick='deleteStudent(${s.studentId})'>Delete</button>
-    </div>`;
-    });
+        students.innerHTML="";
+        list.forEach(s=>{
+            students.innerHTML+=`
+            <div class="student-card">
+                <h3>${s.name}</h3>
+                <p>ID: ${s.studentId}</p>
+                <p>Class: <b>${s.className}</b></p>
+                <p>Parent: ${s.parentName}</p>
+                <p>Mobile: ${s.mobile}</p>
+                <p>Total Fee: ₹${s.totalFee}</p>
+                <p><b>Balance: ₹${s.balanceFee}</b></p>
+                <button class="edit-btn" onclick='editStudent(${JSON.stringify(s)})'>Edit</button>
+                <button class="delete-btn" onclick='deleteStudent(${s.studentId})'>Delete</button>
+            </div>`;
+        });
     }
 
     function filterByClass(){
-    let cls=classFilter.value;
-    if(cls===""){
-    renderStudents(allStudents);
-    }else{
-    let filtered=allStudents.filter(s=>s.className===cls);
-    renderStudents(filtered);
-    }
+        let cls=classFilter.value;
+        if(cls===""){
+            renderStudents(allStudents);
+        }else{
+            let filtered=allStudents.filter(s=>s.className===cls);
+            renderStudents(filtered);
+        }
     }
 
     function searchById(){
-    fetch(api+"/"+searchId.value).then(r=>r.json()).then(s=>{
-    sid.value=s.studentId;
-    sname.value=s.name;
-    pname.value=s.parentName;
-    mobile.value=s.mobile;
-    className.value=s.className;
-    fee.value=s.totalFee;
-    });
+        fetch(api+"/"+searchId.value).then(r=>r.json()).then(s=>{
+            sid.value=s.studentId;
+            sname.value=s.name;
+            pname.value=s.parentName;
+            mobile.value=s.mobile;
+            className.value=s.className;
+            fee.value=s.totalFee;
+        });
     }
 
     function editStudent(s){
-    sid.value=s.studentId;
-    sname.value=s.name;
-    pname.value=s.parentName;
-    mobile.value=s.mobile;
-    className.value=s.className;
-    fee.value=s.totalFee;
+        sid.value=s.studentId;
+        sname.value=s.name;
+        pname.value=s.parentName;
+        mobile.value=s.mobile;
+        className.value=s.className;
+        fee.value=s.totalFee;
     }
 
     function clearForm(){
-    sid.value="";sname.value="";pname.value="";mobile.value="";
-    className.value="";fee.value="";
+        sid.value="";sname.value="";pname.value="";mobile.value="";
+        className.value="";fee.value="";
     }
 
-    /* PAYMENT */
     function fetchStudent(){
-    fetch(api+"/"+pid.value).then(r=>r.json()).then(s=>{
-    currentStudent=s;
-    previousBalance=s.balanceFee;
-    pdata.innerHTML=`
-    <p><b>Name:</b> ${s.name}</p>
-    <p><b>Parent:</b> ${s.parentName}</p>
-    <p><b>Balance:</b> ₹${s.balanceFee}</p>`;
-    });
+        fetch(api+"/"+pid.value).then(r=>r.json()).then(s=>{
+            currentStudent=s;
+            previousBalance=s.balanceFee;
+            pdata.innerHTML=`
+            <p><b>Name:</b> ${s.name}</p>
+            <p><b>Parent:</b> ${s.parentName}</p>
+            <p><b>Balance:</b> ₹${s.balanceFee}</p>`;
+        });
     }
 
     function pay(){
-    paidAmount = Number(amt.value);
-    currentStudent.balanceFee -= paidAmount;
-
-    fetch(api,{
-    method:"POST",
-    headers:{"Content-Type":"application/json"},
-    body:JSON.stringify(currentStudent)
-    });
-
-    fetch("http://localhost:8080/api/payments",{
-    method:"POST",
-    headers:{"Content-Type":"application/json"},
-    body: JSON.stringify({
-    studentId: currentStudent.studentId,
-    amount: paidAmount,
-    dateTime: new Date().toISOString()
-    })
-    }).then(()=>{
-    alert("Payment Successful");
-    generatePaymentReceipt();
-    });
+        paidAmount = Number(amt.value);
+        currentStudent.balanceFee -= paidAmount;
+        fetch(api,{
+            method:"POST",
+            headers:{"Content-Type":"application/json"},
+            body:JSON.stringify(currentStudent)
+        });
+        fetch("http://localhost:8080/api/payments",{
+            method:"POST",
+            headers:{"Content-Type":"application/json"},
+            body: JSON.stringify({
+                studentId: currentStudent.studentId,
+                amount: paidAmount,
+                dateTime: new Date().toISOString()
+            })
+        }).then(()=>{
+            alert("Payment Successful");
+            generatePaymentReceipt();
+        });
     }
 
     function generatePaymentReceipt(){
-    document.getElementById("paymentReceipt").style.display="block";
-    r_sid.innerText=currentStudent.studentId;
-    r_name.innerText=currentStudent.name;
-    r_parent.innerText=currentStudent.parentName;
-    r_mobile.innerText=currentStudent.mobile;
-    r_total.innerText=currentStudent.totalFee;
-    r_prev.innerText=previousBalance;
-    r_paid.innerText=paidAmount;
-    r_remain.innerText=currentStudent.balanceFee;
-    r_date.innerText=new Date().toLocaleString();
+        document.getElementById("paymentReceipt").style.display="block";
+        r_sid.innerText=currentStudent.studentId;
+        r_name.innerText=currentStudent.name;
+        r_parent.innerText=currentStudent.parentName;
+        r_mobile.innerText=currentStudent.mobile;
+        r_total.innerText=currentStudent.totalFee;
+        r_prev.innerText=previousBalance;
+        r_paid.innerText=paidAmount;
+        r_remain.innerText=currentStudent.balanceFee;
+        r_date.innerText=new Date().toLocaleString();
     }
 
     function printPayment(){
-    let content=document.getElementById("paymentReceipt").innerHTML;
-    let win=window.open("","","width=800,height=600");
-    win.document.write(`
-    <html>
-    <head>
-    <title>Receipt</title>
-    <style>
-    body{font-family:Poppins;padding:40px}
-    .receipt-box{width:210mm;min-height:297mm;border:1px solid #000;padding:20mm}
-    </style>
-    </head>
-    <body>
-    <div class="receipt-box">${content}</div>
-    </body>
-    </html>
-    `);
-    win.document.close();
-    win.print();
+        let content=document.getElementById("paymentReceipt").innerHTML;
+        let win=window.open("","","width=800,height=600");
+        win.document.write(`
+        <html>
+        <head>
+        <title>Receipt</title>
+        <style>
+        body{font-family:Poppins;padding:40px;background:white}
+        .receipt-box{width:210mm;min-height:297mm;border:1px solid #000;padding:20mm;background:white}
+        </style>
+        </head>
+        <body>
+        <div class="receipt-box">${content}</div>
+        </body>
+        </html>
+        `);
+        win.document.close();
+        win.print();
     }
 
-    /* RECEIPT */
     function getReceipt(){
-    let id = rid.value;
-
-    fetch(api+"/"+id).then(r=>r.json()).then(s=>{
-    fetch("http://localhost:8080/api/payments/student/"+id)
-    .then(r=>r.json())
-    .then(payments=>{
-
-    let historyHtml = "";
-    let totalPaid = 0;
-
-    payments.forEach(p=>{
-    totalPaid += p.amount;
-    historyHtml += `
-    <tr>
-    <td>₹${p.amount}</td>
-    <td>${new Date(p.dateTime).toLocaleString()}</td>
-    </tr>`;
-    });
-
-    rdata.innerHTML = `
-    <h3>Shri Gayatri English Medium High School</h3>
-    <p><b>Student:</b> ${s.name}</p>
-    <p><b>Parent:</b> ${s.parentName}</p>
-    <p><b>Class:</b> ${s.className}</p>
-    <p><b>Total Fee:</b> ₹${s.totalFee}</p>
-    <p><b>Total Paid:</b> ₹${totalPaid}</p>
-    <p><b>Remaining Balance:</b> ₹${s.balanceFee}</p>
-    <p><b>Date:</b> ${new Date().toLocaleDateString()}</p>
-
-    <h4>Payment History</h4>
-    <table border="1" width="100%" style="border-collapse:collapse">
-    <tr>
-    <th>Amount</th>
-    <th>Date & Time</th>
-    </tr>
-    ${historyHtml}
-    </table>
-    `;
-    });
-    });
+        let id = rid.value;
+        fetch(api+"/"+id).then(r=>r.json()).then(s=>{
+            fetch("http://localhost:8080/api/payments/student/"+id)
+            .then(r=>r.json())
+            .then(payments=>{
+                let historyHtml = "";
+                let totalPaid = 0;
+                payments.forEach(p=>{
+                    totalPaid += p.amount;
+                    historyHtml += `
+                    <tr>
+                    <td>₹${p.amount}</td>
+                    <td>${new Date(p.dateTime).toLocaleString()}</td>
+                    </tr>`;
+                });
+                rdata.innerHTML = `
+                <h3 style="text-align:center;color:#fff">Shri Gayatri English Medium High School</h3>
+                <p><b>Student:</b> ${s.name}</p>
+                <p><b>Parent:</b> ${s.parentName}</p>
+                <p><b>Class:</b> ${s.className}</p>
+                <p><b>Total Fee:</b> ₹${s.totalFee}</p>
+                <p><b>Total Paid:</b> ₹${totalPaid}</p>
+                <p><b>Remaining Balance:</b> ₹${s.balanceFee}</p>
+                <p><b>Date:</b> ${new Date().toLocaleDateString()}</p>
+                <h4 style="color:#667eea">Payment History</h4>
+                <table border="1" width="100%" style="border-collapse:collapse">
+                <tr>
+                <th>Amount</th>
+                <th>Date & Time</th>
+                </tr>
+                ${historyHtml}
+                </table>
+                `;
+            });
+        });
     }
 </script>
 
